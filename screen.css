@@ -1,0 +1,21 @@
+body {
+	font: 10pt arial;
+}
+#debugconsole {
+	display:block;
+	border: 1px solid #E2E2EE;
+	height: 200;
+	font: 8pt Consolas;
+	background-color: #F2F2FF;
+}
+#gamearea {
+	font: 8pt arial;
+	letter-spacing: -1px;
+	width: 640;
+	height: 480;
+	border: 1px solid #CCCCCC;
+}
+#stixgame {
+	position: relative;
+	background-color: black;
+}
