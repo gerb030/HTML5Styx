@@ -4,7 +4,8 @@ body {
 #debugconsole {
 	display:block;
 	border: 1px solid #E2E2EE;
-	height: 200;
+	height: 100;
+	margin-top:20px;
 	font: 8pt Consolas;
 	background-color: #F2F2FF;
 }
