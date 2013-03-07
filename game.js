@@ -20,11 +20,16 @@ var Config = {
     getGameYOffset : function() {
         return 8;
     },
+    getPlayerEdgeSpeed : function() {
+        return 2;
+    },
     getMaxInitialMenaceLength : function() {
         return 50;
+        // not used
     },
     getMinInitialMenaceLength : function() {
         return 10;
+        // not used
     },
     getMinInitialMenaceSpeed : function() {
         return 2;
@@ -241,6 +246,7 @@ var Menace = {
 var PencilAnim = {
     draw : function(ctx, x, y, frameNr) {
         if (frameNr < 8 || frameNr > 48)  {
+//            debugLog(x+', '+y);
             ctx.save();ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(57.5,0);ctx.lineTo(57.5,96.25);ctx.lineTo(0,96.25);ctx.closePath();ctx.translate(x,y);ctx.translate(x+0,y+0);ctx.scale(1.25,1.25);ctx.translate(9,11);ctx.strokeStyle = 'rgba(0,0,0,0)';ctx.lineCap = 'butt';ctx.lineJoin = 'miter';ctx.miterLimit = 4;ctx.save();ctx.restore();ctx.save();ctx.fillStyle = "rgba(0, 0, 0, 0)";ctx.strokeStyle = "rgba(0, 0, 0, 0)";ctx.save();ctx.restore();ctx.save();ctx.save();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(5.086171,35.037826);ctx.lineTo(2.6592045,54.665015);ctx.lineTo(13.597241,38.135602);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(5.086171,35.037826);ctx.lineTo(17.297966,0.922754);ctx.lineTo(25.990122,4.0864403);ctx.lineTo(13.597241,38.135602);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(5.086171,35.037826);ctx.lineTo(13.597241,38.135602);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(7.80247,36.026478);ctx.lineTo(20.063512,2.3395412);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(10.880942,37.14695);ctx.lineTo(23.141984,3.4600135);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(3.6111825,46.966247);ctx.lineTo(6.5469218,48.49113);ctx.lineTo(6.5469218,48.49113);ctx.fill();ctx.stroke();ctx.restore();ctx.restore();ctx.restore();ctx.restore();
         } else if (frameNr < 16 || frameNr > 40)  {
             ctx.save();ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(62.5,0);ctx.lineTo(62.5,93.75);ctx.lineTo(0,93.75);ctx.closePath();ctx.translate(x,y);ctx.translate(x+0,y+2);ctx.scale(1.25,1.25);ctx.translate(9,10);ctx.strokeStyle = 'rgba(0,0,0,0)';ctx.lineCap = 'butt';ctx.lineJoin = 'miter';ctx.miterLimit = 4;ctx.save();ctx.restore();ctx.save();ctx.fillStyle = "rgba(0, 0, 0, 0)";ctx.strokeStyle = "rgba(0, 0, 0, 0)";ctx.save();ctx.restore();ctx.save();ctx.save();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(6.1533246,34.528987);ctx.lineTo(2.3637274,53.939327);ctx.lineTo(14.428759,38.213448);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(6.1533246,34.528987);ctx.lineTo(20.715094,1.3488582);ctx.lineTo(29.166601,5.1117117);ctx.lineTo(14.428759,38.213448);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(6.1533246,34.528987);ctx.lineTo(14.428759,38.213448);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(8.7944207,35.704879);ctx.lineTo(23.375478,2.9552888);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(11.787663,37.037556);ctx.lineTo(26.36872,4.287966);ctx.fill();ctx.stroke();ctx.restore();ctx.save();ctx.strokeStyle = "#8b97bc";ctx.lineWidth = 1;ctx.lineCap = "round";ctx.lineJoin = "round";ctx.beginPath();ctx.moveTo(3.850197,46.32562);ctx.lineTo(6.6728448,48.051766);ctx.lineTo(6.6728448,48.051766);ctx.fill();ctx.stroke();ctx.restore();ctx.restore();ctx.restore();ctx.restore();                
@@ -253,18 +259,49 @@ var PencilAnim = {
 }
 
 var Player = {
-    _x : Config.getGameHeight()/2,
+    _x : Config.getGameWidth()/2,
     _y : Config.getGameHeight()-Config.getChromeWidth(),
-    _onChromeEdge : true,
+    _targetX : null,
+    _targetY : null,
+    _onEdge : 'bottom',
+    setEdge : function(edgeType) {
+         this._onEdge = edgeType;
+    },
     create : function() {
 //        console.log(Config.getGameHeight()-100);
     },
+    setTargetCoordinates : function(x, y) {
+        this._targetX = x;
+        this._targetY = y;
+    },
     update : function() {
-        
+        switch(this._onEdge) {
+            case 'bottom':
+            case 'top':
+                // move left and right only
+                if (this._targetX > this._x) {
+                    this._x += Config.getPlayerEdgeSpeed();
+                } else {
+                    this._x -= Config.getPlayerEdgeSpeed();
+                }
+                break;
+            case 'left':
+            case 'right':
+                // move up and down only
+                if (this._targetY > this._y) {
+                    this._y += Config.getPlayerEdgeSpeed();
+                } else {
+                    this._y -= Config.getPlayerEdgeSpeed();
+                }
+                break;
+            default:
+                // we're out in the open fields... 
+                break;
+        }
     },
     draw : function(ctx, frame) {
-        if (this.onChromeEdge) {
-            PencilAnim.draw(ctx, this._x, this._y, 0);
+        if (this._onEdge != false) {
+            PencilAnim.draw(ctx, (this._x-13)/2, (this._y-82)/2, 0);
         } else {
             PencilAnim.draw(ctx, this._x, this._y, this._frame % 32);
         }
@@ -299,6 +336,19 @@ var Game =  {
         return true;
     },
     handleEvent : function(event) {
+        uEvent = this._getEvent(event);
+        this._player.setTargetCoordinates(uEvent.x, uEvent.y);
+        //          //initMouseEvent(type, canBubble, cancelable, view, clickCount,
+        // //           screenX, screenY, clientX, clientY, ctrlKey,
+        // //           altKey, shiftKey, metaKey, button, relatedTarget);
+        
+        // var simulatedEvent = document.createEvent("MouseEvent");
+        // simulatedEvent.initMouseEvent(type, true, true, window, 1,
+        //                           first.screenX, first.screenY,
+        //                           first.clientX, first.clientY, false,
+        //                           false, false, false, 0/*left*/, null);
+    },
+    _getEvent : function(event) {
         var touches = event.changedTouches;
         var uEvent = null;
         if (touches != undefined) {
@@ -313,24 +363,12 @@ var Game =  {
                     type="mouseup"; break;
                 default: return;
             }
-            uEvent = UserEvent.create(first.x, first.y, type);
+            uEvent = UserEvent.create(first.clientX, first.clientY, type);
         } else {
-            uEvent = UserEvent.create(event.screenX, event.screenX, event.type);
+            uEvent = UserEvent.create(event.clientX, event.clientY, event.type);
         }
-        debugLog(uEvent.x+', '+uEvent.y+' event '+uEvent.type);
-
-        //          //initMouseEvent(type, canBubble, cancelable, view, clickCount,
-        // //           screenX, screenY, clientX, clientY, ctrlKey,
-        // //           altKey, shiftKey, metaKey, button, relatedTarget);
-        
-        // var simulatedEvent = document.createEvent("MouseEvent");
-        // simulatedEvent.initMouseEvent(type, true, true, window, 1,
-        //                           first.screenX, first.screenY,
-        //                           first.clientX, first.clientY, false,
-        //                           false, false, false, 0/*left*/, null);
-
-        //                                                                              first.target.dispatchEvent(simulatedEvent);
         event.preventDefault();
+        return uEvent;
     },
     start : function(canvas) {
         this._level = 0;
@@ -341,6 +379,7 @@ var Game =  {
     },
     update : function() {
         this._frame++;
+        this._player.update(this._frame);
         this._menace.update(this._frame);
         // handle game status
     },
