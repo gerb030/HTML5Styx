@@ -44,7 +44,7 @@ var Game =  {
     },
     start : function(canvas) {
         this._level = 0;
-        GameChrome.init();
+        Pathways.init();
         this._createMenace();
         this._createPlayer();
         this._canvas = document.getElementById("stixGame").getContext("2d");
@@ -58,7 +58,7 @@ var Game =  {
     draw : function() {
         this._canvas.clearRect(0, 0, Config.getGameWidth(), Config.getGameHeight());
         this._menace.draw(this._canvas);
-        GameChrome.draw(this._canvas);
+        Pathways.draw(this._canvas);
         this._player.draw(this._canvas, this._frame);
     },
     _createMenace : function() {

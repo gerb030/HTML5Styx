@@ -3,7 +3,8 @@ var Player = {
     _y : Config.getGameHeight()-Config.getChromeWidth(),
     _targetX : null,
     _targetY : null,
-    _onEdge : 'bottom',
+    _onEdge : true,
+    _route : [],
     setEdge : function(edgeType) {
          this._onEdge = edgeType;
     },
@@ -11,8 +12,16 @@ var Player = {
 //        console.log(Config.getGameHeight()-100);
     },
     setTargetCoordinates : function(x, y) {
+        this._route = Pathways.findRouteToPathwayPoint(x, y);
+        // TODO: walk through route and set new endpoints
+        for(var r=0;r<route.length;r++) {
+            //route[r].;
+        }
         this._targetX = x;
         this._targetY = y;
+    },
+    getCoords : function() {
+        return [this._x, this._y];
     },
     update : function(frame) {
         if (this._checkIfDrawingFrame(frame)) {

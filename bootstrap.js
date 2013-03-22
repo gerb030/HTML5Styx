@@ -5,7 +5,7 @@ var Bootstrap =  {
             this.addCanvas();        
             Game.start(gameArea); // game starts immediately for now
  //           mainloop();
-            var frameRateInterval = 1000.0 / 25.0;
+            var frameRateInterval = 1000.0 / 40.0;
             setInterval( mainloop, frameRateInterval );
         }
         document.addEventListener("touchstart", Game.handleEvent, true);

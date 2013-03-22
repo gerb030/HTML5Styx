@@ -21,7 +21,7 @@ var Config = {
         return 8;
     },
     getPlayerEdgeSpeed : function() {
-        return 3;
+        return 5;
     },
     getMaxInitialMenaceLength : function() {
         return 50;
@@ -56,9 +56,12 @@ var Config = {
         return 1;
     },
     getPlayerKeyFrameSpeed : function() {
-        return 16;
+        return 1;
     },
     getDebugLinesToShow : function() {
+        return 8;
+    },
+    getClickMargin : function() {
         return 8;
     }
 

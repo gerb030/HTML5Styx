@@ -3,8 +3,8 @@ var UserEvent = {
     y : null,
     type : null,
     create : function(x, y, type) {
-        this.x = x;
-        this.y = y;
+        this.x = x-18;
+        this.y = y-14;
         this.type = type;
         return this;
     }
